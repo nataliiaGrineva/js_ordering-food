@@ -1,10 +1,20 @@
 const list = ['Apple', 'Bread', 'Carrot', 'Dumplings',
              'Eggs','Fish','Garlic','Honey','Ice cream','Jam'];
 const nodes = list.map((item) => `<span>${item}</span>`);
+const MOVE_UP = {
+  type: 'moveUp',
+  index: null,
+};
+const UNSELECT = {
+  type: 'unselect',
+}
+const buttonUp = document.querySelector('.up');
+const buttonDown = document.querySelector('.down'); 
 
-let initialState = {
+const initialState = {
   items: list,
   nodes: nodes,
+  selected: null,
   up: true,
   down: true
 }
@@ -12,24 +22,34 @@ let initialState = {
 function reducer(state, action) {
   let up = false;
   let down = false;
+  let selected = state.selected;
   
   switch (action.type) {
     case 'select':
-        if (action.index === 0) {
-          up = true;
-        } else if (action.index === state.items.length-1) {
-          down = true;
-        }
+      if (action.index === 0) {
+        up = true;
+      } else if (action.index === state.items.length-1) {
+        down = true;
+      }
       return {
         ...state,
         nodes: state.items.map((item, index) => {
           if (index === action.index) {
-            item = `<span class='active'>${item}</span>`;
+            if (action.index !== state.selected) {
+              selected = action.index;
+              item = `<span class='active'>${item}</span>`;
+            } else {
+              selected = null;
+              item = `<span>${item}</span>`;
+              up = true;
+              down = true;
+            }
           } else {
             item = `<span>${item}</span>`;
           }
           return item
         }),
+        selected: selected,
         up: up,
         down: down
       }
@@ -41,15 +61,17 @@ function reducer(state, action) {
         down: true
       }
     case 'moveUp':
-      return move(state, action);
+      selected -= 1;
+      return move(state, action, selected);
     case 'moveDown':
-      return move(state, action);
+      selected += 1;
+      return move(state, action, selected);
     default:
       return state;
   } 
 }
 
-function move(state, action) {
+function move(state, action, selected) {
   const newItems = [...state.items];
   const itemToMove = newItems.splice(action.index, 1);
   const newNodes = [...state.nodes];
@@ -57,9 +79,9 @@ function move(state, action) {
   let up;
   let down;
 
-  if (action.index === 1) {
+  if (selected === 0) {
     up = true;
-  } else if (action.index === state.items.length-2) {
+  } else if (selected === state.items.length - 1) {
     down = true;
   }
   if (action.type === 'moveDown') {
@@ -74,6 +96,7 @@ function move(state, action) {
     ...state,
     items: newItems,
     nodes: newNodes,
+    selected: selected,
     up: up,
     down: down
   }
@@ -86,13 +109,11 @@ store.subscribe(() => render(store.getState().nodes));
 
 document.addEventListener('click', () => {
   if (event.target.tagName !== 'SPAN' && event.target.tagName !== 'BUTTON') {
-    store.dispatch({
-      type: 'unselect'
-    });
+    store.dispatch(UNSELECT);
   }
 });
 
-document.querySelector('.up').addEventListener('click', () => {
+buttonUp.addEventListener('click', () => {
   const items = document.querySelectorAll('span');
   let index;
   for(let i = 0; i < items.length; i++) {
@@ -106,13 +127,11 @@ document.querySelector('.up').addEventListener('click', () => {
     return;
   }
   
-  store.dispatch({
-    type: 'moveUp',
-    index: index
-  });
+  MOVE_UP.index = index;
+  store.dispatch(MOVE_UP);
 });
 
-document.querySelector('.down').addEventListener('click', () => {
+buttonDown.addEventListener('click', () => {
   const items = document.querySelectorAll('span');
   let index;
   for(let i = 0; i < items.length; i++) {
@@ -129,11 +148,8 @@ document.querySelector('.down').addEventListener('click', () => {
 });
 
 function render(storeItems) {
-  const upButton = document.querySelector('.up');
-  const downButton = document.querySelector('.down');
-
-  upButton.disabled = store.getState().up;
-  downButton.disabled = store.getState().down;
+  buttonUp.disabled = store.getState().up;
+  buttonDown.disabled = store.getState().down;
 
   const list = document.querySelector('.list');
   list.innerHTML = '';

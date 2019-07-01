@@ -1,3 +1,5 @@
+https://gitkurmax.github.io/js_ordering-food/
+
 # Ordering food
 
 Here are 10 items of food: 

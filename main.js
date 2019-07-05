@@ -1,10 +1,22 @@
 const list = ['Apple', 'Bread', 'Carrot', 'Dumplings',
              'Eggs','Fish','Garlic','Honey','Ice cream','Jam'];
 const nodes = list.map((item) => `<span>${item}</span>`);
+
+const SELECT = {
+  type: 'select',
+  index: null,
+};
+
 const MOVE_UP = {
   type: 'moveUp',
   index: null,
 };
+
+const MOVE_DOWN = {
+  type: 'moveDown',
+  index: null,
+};
+
 const UNSELECT = {
   type: 'unselect',
 }
@@ -28,7 +40,7 @@ function reducer(state, action) {
     case 'select':
       if (action.index === 0) {
         up = true;
-      } else if (action.index === state.items.length-1) {
+      } else if (action.index === state.items.length - 1) {
         down = true;
       }
       return {
@@ -141,10 +153,8 @@ buttonDown.addEventListener('click', () => {
     }
   }
   
-  store.dispatch({
-    type: 'moveDown',
-    index: index
-  });
+  MOVE_DOWN.index = index;
+  store.dispatch(MOVE_DOWN);
 });
 
 function render(storeItems) {
@@ -159,10 +169,8 @@ function render(storeItems) {
     list.append(li);
     const span = li.querySelector('span');
     span.addEventListener('click', () =>  {
-      store.dispatch({
-        type: 'select',
-        index: storeItems.indexOf(item)
-      });
+      SELECT.index = storeItems.indexOf(item);
+      store.dispatch(SELECT);
     });
   }
 }

@@ -13,6 +13,32 @@ Here are 10 items of food:
 - Ice cream
 - Jam
 
+
+Create `store.js`. Export:
+- store
+- actions: {
+  MOVE_UP,
+  MOVE_DOWN,
+  SELECT,
+}
+- (\*) actionCreators: { moveUp, moveDown, select }
+
+```javasccript
+const { store, actions } = require('store');
+
+const initialState = store.getState();
+store.dispatch(actions.SELECT, 0);
+store.dispatch(actions.MOVE_DOWN);
+store.dispatch(actions.MOVE_DOWN);
+
+const updatedState = store.getState();
+
+cosole.log('Should be true', initialState.items[0] === initialState.items[2]);
+
+```
+
+
+### Deprecated
 Make an app that would allow sorting them in an arbitrary order. It should work as follows:
 
 1. There are two buttons, "Move Up" and "Move Down". They are initially disabled.
@@ -24,9 +50,3 @@ Make an app that would allow sorting them in an arbitrary order. It should work 
 Create your project as a simple HTML page that uses Redux (link to [redux.min.js](redux.min.js)).
 
 First decide what will be stored in your state, what types of actions you will use and what exact data the actions will include, if any. Then implement a reducer. After all that is done you can move on to writing the rest of the code.
-
-
-Create `store.js`. Export:
-- store
-- actions: { MOVE_UP, ... }
-- (\*) actionCreators: { moveUp }

@@ -24,3 +24,9 @@ Make an app that would allow sorting them in an arbitrary order. It should work 
 Create your project as a simple HTML page that uses Redux (link to [redux.min.js](redux.min.js)).
 
 First decide what will be stored in your state, what types of actions you will use and what exact data the actions will include, if any. Then implement a reducer. After all that is done you can move on to writing the rest of the code.
+
+
+Create `store.js`. Export:
+- store
+- actions: { MOVE_UP, ... }
+- (\*) actionCreators: { moveUp }

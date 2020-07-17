@@ -33,7 +33,7 @@ store.dispatch(actions.MOVE_DOWN);
 
 const updatedState = store.getState();
 
-cosole.log('Should be true', initialState.items[0] === initialState.items[2]);
+cosole.log('Should be true', initialState.items[0] === updatedState.items[2]);
 
 ```
 

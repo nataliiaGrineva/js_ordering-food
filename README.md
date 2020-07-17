@@ -27,9 +27,9 @@ Create `store.js`. Export:
 const { store, actions } = require('store');
 
 const initialState = store.getState();
-store.dispatch(actions.SELECT, 0);
-store.dispatch(actions.MOVE_DOWN);
-store.dispatch(actions.MOVE_DOWN);
+store.dispatch({ type: actions.SELECT, index: 0 });
+store.dispatch({ type: actions.MOVE_DOWN });
+store.dispatch({ type: actions.MOVE_DOWN });
 
 const updatedState = store.getState();
 

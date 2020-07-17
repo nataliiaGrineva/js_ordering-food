@@ -5,5 +5,5 @@ const { createStore } = require('./redux.min');
 module.exports = {
   store,
   actions,
-  actionCreators,
+//   actionCreators,
 };
